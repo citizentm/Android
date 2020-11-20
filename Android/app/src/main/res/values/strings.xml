@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">CitizenTM</string>
+    <string name="title_home">Administration</string>
+    <string name="title_dashboard">Issues map</string>
+    <string name="title_notifications">Projects</string>
+</resources>
