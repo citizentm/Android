@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UploadPicturesAdapter extends RecyclerView.Adapter<UploadPicturesAdapter.ViewHolder> {
-    public List<Uri> uriList;
+    public ArrayList<Uri> uriList;
 
     public UploadPicturesAdapter(ArrayList<Uri> mUriList)
     {

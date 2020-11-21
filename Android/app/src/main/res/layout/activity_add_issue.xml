@@ -110,4 +110,15 @@
         android:textAllCaps="false"
         android:onClick="sendIssueToServer"
         android:text="Add issue"/>
+
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:gravity="center">-->
+
+<!--        <ProgressBar-->
+<!--            android:layout_width="50dp"-->
+<!--            android:layout_height="50dp"/>-->
+<!--    </LinearLayout>-->
+
 </RelativeLayout>

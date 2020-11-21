@@ -5,14 +5,23 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.TranslateAnimation;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
 import com.example.myapplication.activities.AddIssueActivity;
+import com.example.myapplication.adapters.IssuePicturesAdapter;
+import com.example.myapplication.adapters.UploadPicturesAdapter;
+import com.example.myapplication.helpers.Mockers;
 import com.example.myapplication.helpers.ProblemsClusterRenderer;
+import com.example.myapplication.models.ProblemModel;
 import com.example.myapplication.models.ProblemsCluster;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -29,9 +38,13 @@ import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.ClusterRenderer;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
-public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
+import static android.view.View.GONE;
+
+public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private final int ONGOING_PROBLEMS = 0;
     private final int FIXED_PROBLEMS = 1;
@@ -41,7 +54,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private ProblemsCluster clusterItem;
     private TextView ongoingProblemsTv;
     private TextView fixedProblemsTv;
+    private TextView issueDescriptionTv;
+    private TextView issueDateTv;
+    private LinearLayout bottomContainerLl;
     private FloatingActionButton addIssueFab;
+    private RecyclerView issuePhotoListRv;
+    private boolean isIssueShowOnMap;
+    private ImageView closeDetailsIv;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -51,6 +70,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         SupportMapFragment supportMapFragment = (SupportMapFragment)getChildFragmentManager().findFragmentById(R.id.f_google_map);
         supportMapFragment.getMapAsync(this);
         onProblemsTabChanged(ONGOING_PROBLEMS);
+        bottomContainerLl.setVisibility(GONE);
         return root;
     }
 
@@ -75,6 +95,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 startActivity(new Intent(getContext(), AddIssueActivity.class));
             }
         });
+
+        closeDetailsIv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                slideDown(bottomContainerLl);
+            }
+        });
     }
 
     @Override
@@ -83,20 +110,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         clusterManager = new ClusterManager<>(getContext(), googleMap);
         googleMap.setOnCameraIdleListener(clusterManager);
         googleMap.setOnMarkerClickListener(clusterManager);
-        googleMap.setOnMapLongClickListener(this);
         clusterManager.setAnimation(true);
         clusterRenderer = new ProblemsClusterRenderer(getContext(), googleMap, clusterManager);
         clusterManager.setRenderer(clusterRenderer);
         clusterManager.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<ProblemsCluster>() {
             @Override
             public boolean onClusterClick(Cluster<ProblemsCluster> cluster) {
-                googleMap.getUiSettings().setZoomControlsEnabled(true);
+                googleMap.getUiSettings().setZoomControlsEnabled(false);
                 CameraPosition cameraPosition = new CameraPosition.Builder()
                         .target(cluster.getPosition() )
                         .zoom(12)
                         .build();
 //                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 2000, null);
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(cluster.getPosition(), 10));
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(cluster.getPosition(), 13));
                 return false;
             }
         });
@@ -104,33 +130,72 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         clusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<ProblemsCluster>() {
             @Override
             public boolean onClusterItemClick(ProblemsCluster item) {
+                setMarkerData(item);
+                slideUp(bottomContainerLl);
                 return false;
             }
         });
         addItems();
     }
 
-    private void addItems() {
-        for (int i = 1; i < 15; i++) {
-            LatLng newPosition = new LatLng(45.7518239 + Math.random(), 21.2221786 - Math.random());
-            ProblemsCluster clusterItem = new ProblemsCluster(newPosition, "marker" +i, "snippet" + i);
-            clusterManager.addItem(clusterItem);
-        }
+    private void setMarkerData(ProblemsCluster item) {
+        setRecyclerView(new ArrayList<>(item.getPhotosUrl()));
+        issueDescriptionTv.setText(item.getDescription());
+        issueDateTv.setText(item.getPostedDate());
     }
 
-    @Override
-    public void onMapLongClick(LatLng latLng) {
-        if (clusterItem != null){
-            clusterManager.removeItem(clusterItem);
+    private void setRecyclerView(ArrayList<String> photosUrl){
+        if (photosUrl == null){
+            return;
         }
-        clusterItem = new ProblemsCluster(latLng, "My new item", "Very cool item");
-        clusterManager.addItem(clusterItem);
+        IssuePicturesAdapter mPictureAdapter = new IssuePicturesAdapter(photosUrl);
+        issuePhotoListRv.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
+        issuePhotoListRv.setAdapter(mPictureAdapter);
+    }
+
+    private void slideUp(View view){
+        view.setVisibility(View.VISIBLE);
+        TranslateAnimation animate = new TranslateAnimation(
+                0,                 // fromXDelta
+                0,                 // toXDelta
+                view.getHeight(),  // fromYDelta
+                0);                // toYDelta
+        animate.setDuration(500);
+        animate.setFillAfter(true);
+        view.startAnimation(animate);
+        isIssueShowOnMap = true;
+    }
+
+    private void slideDown(View view){
+        TranslateAnimation animate = new TranslateAnimation(
+                0,                 // fromXDelta
+                0,                 // toXDelta
+                0,                 // fromYDelta
+                view.getHeight()); // toYDelta
+        animate.setDuration(500);
+        animate.setFillAfter(true);
+        view.startAnimation(animate);
+        isIssueShowOnMap = false;
+    }
+
+    private void addItems() {
+        for (int i = 0; i < Mockers.getInstance().mockMarkersList().size(); i++) {
+            ProblemModel problemModel = Mockers.getInstance().mockMarkersList().get(i);
+//            LatLng newPosition = new LatLng(problemModel.getPosition().latitude, problemModel.getPosition().longitude);
+            ProblemsCluster clusterItem = new ProblemsCluster(problemModel.getId(), problemModel.getPosition(),  problemModel.getPostedDate(), problemModel.getDescription(), problemModel.isResolved(), problemModel.getPhotosUrlList());
+            clusterManager.addItem(clusterItem);
+        }
     }
 
     private void initializeViews(View root) {
         fixedProblemsTv = root.findViewById(R.id.tv_map_fixed);
         ongoingProblemsTv = root.findViewById(R.id.tv_map_ongoing);
         addIssueFab = root.findViewById(R.id.fab_add_issue);
+        issuePhotoListRv = root.findViewById(R.id.rv_map_issue_photos);
+        issueDescriptionTv = root.findViewById(R.id.tv_map_issue_description);
+        issueDateTv = root.findViewById(R.id.tv_map_issue_date);
+        bottomContainerLl = root.findViewById(R.id.ll_map_issue_selected);
+        closeDetailsIv = root.findViewById(R.id.iv_map_issue_close);
     }
 
     private void onProblemsTabChanged(int selectedTab){
