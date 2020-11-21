@@ -121,7 +121,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         .target(cluster.getPosition() )
                         .zoom(12)
                         .build();
-//                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 2000, null);
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(cluster.getPosition(), 13));
                 return false;
             }
@@ -181,7 +180,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private void addItems() {
         for (int i = 0; i < Mockers.getInstance().mockMarkersList().size(); i++) {
             ProblemModel problemModel = Mockers.getInstance().mockMarkersList().get(i);
-//            LatLng newPosition = new LatLng(problemModel.getPosition().latitude, problemModel.getPosition().longitude);
             ProblemsCluster clusterItem = new ProblemsCluster(problemModel.getId(), problemModel.getPosition(),  problemModel.getPostedDate(), problemModel.getDescription(), problemModel.isResolved(), problemModel.getPhotosUrlList());
             clusterManager.addItem(clusterItem);
         }

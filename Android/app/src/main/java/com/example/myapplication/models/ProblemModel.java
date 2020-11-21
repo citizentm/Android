@@ -15,8 +15,9 @@ public class ProblemModel {
     private boolean isResolved;
     private List<String> photosUrlList;
 
-    public ProblemModel(int id, LatLng position, String description, String postedDate, List<String> photosUrlList) {
+    public ProblemModel(int id, LatLng position, String description, String postedDate, List<String> photosUrlList, boolean isResolved) {
         this.id = id;
+        this.isResolved = isResolved;
         this.position = position;
         this.description = description;
         this.postedDate = postedDate;
