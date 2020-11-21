@@ -1,5 +1,6 @@
 package com.example.myapplication.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.myapplication.R;
+import com.example.myapplication.activities.AddIssueActivity;
 import com.example.myapplication.helpers.ProblemsClusterRenderer;
 import com.example.myapplication.models.ProblemsCluster;
 import com.google.android.gms.maps.CameraUpdate;
@@ -21,6 +23,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
@@ -30,23 +33,48 @@ import java.util.List;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
 
+    private final int ONGOING_PROBLEMS = 0;
+    private final int FIXED_PROBLEMS = 1;
     private ClusterManager<ProblemsCluster> clusterManager;
     private ProblemsClusterRenderer clusterRenderer;
     private List<MarkerOptions> markersList;
     private ProblemsCluster clusterItem;
+    private TextView ongoingProblemsTv;
+    private TextView fixedProblemsTv;
+    private FloatingActionButton addIssueFab;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_map, container, false);
+        initializeViews(root);
+        setOnClickListeners();
         SupportMapFragment supportMapFragment = (SupportMapFragment)getChildFragmentManager().findFragmentById(R.id.f_google_map);
-
         supportMapFragment.getMapAsync(this);
-        setupCluster();
+        onProblemsTabChanged(ONGOING_PROBLEMS);
         return root;
     }
 
-    private void setupCluster() {
+    private void setOnClickListeners() {
+        ongoingProblemsTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onProblemsTabChanged(ONGOING_PROBLEMS);
+            }
+        });
 
+        fixedProblemsTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onProblemsTabChanged(FIXED_PROBLEMS);
+            }
+        });
+
+        addIssueFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), AddIssueActivity.class));
+            }
+        });
     }
 
     @Override
@@ -97,5 +125,26 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         }
         clusterItem = new ProblemsCluster(latLng, "My new item", "Very cool item");
         clusterManager.addItem(clusterItem);
+    }
+
+    private void initializeViews(View root) {
+        fixedProblemsTv = root.findViewById(R.id.tv_map_fixed);
+        ongoingProblemsTv = root.findViewById(R.id.tv_map_ongoing);
+        addIssueFab = root.findViewById(R.id.fab_add_issue);
+    }
+
+    private void onProblemsTabChanged(int selectedTab){
+        switch (selectedTab){
+            case 0:
+                fixedProblemsTv.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+                ongoingProblemsTv.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                break;
+            case 1:
+                fixedProblemsTv.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                ongoingProblemsTv.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+                break;
+            default:
+                break;
+        }
     }
 }

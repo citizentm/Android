@@ -20,4 +20,8 @@
         <item name="android:stateListAnimator">@null</item>
     </style>
 
+    <style name="InputDialogTheme" parent="Theme.MaterialComponents.Light.Dialog.Alert">
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
 </resources>
