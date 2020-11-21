@@ -6,6 +6,7 @@ import androidx.annotation.Nullable;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProblemsCluster implements ClusterItem {
@@ -23,13 +24,16 @@ public class ProblemsCluster implements ClusterItem {
         this.description = snippet;
     }
 
-    public ProblemsCluster(int id, LatLng position, String postedDate, String description, boolean isResolved, List<String> photosUrl) {
+    public ProblemsCluster(int id, LatLng position, String postedDate, String description, boolean isResolved, List<ImageModel> photosList) {
         this.id = id;
         this.position = position;
         this.postedDate = postedDate;
         this.description = description;
         this.isResolved = isResolved;
-        this.photosUrl = photosUrl;
+        photosUrl = new ArrayList<>();
+        for (ImageModel imageModel: photosList) {
+            photosUrl.add(imageModel.getUrl());
+        }
     }
 
     public int getId() {

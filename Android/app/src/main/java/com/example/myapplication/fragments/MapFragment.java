@@ -24,6 +24,7 @@ import com.example.myapplication.adapters.UploadPicturesAdapter;
 import com.example.myapplication.appConstants.AppConstants;
 import com.example.myapplication.helpers.Mockers;
 import com.example.myapplication.helpers.ProblemsClusterRenderer;
+import com.example.myapplication.helpers.StorageHelper;
 import com.example.myapplication.models.ProblemModel;
 import com.example.myapplication.models.ProblemsCluster;
 import com.google.android.gms.maps.CameraUpdate;
@@ -117,7 +118,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             String result = data.getStringExtra(AppConstants.ON_ADD_ISSUE);
             Gson gson = new Gson();
             ProblemModel problemModel = gson.fromJson(result, ProblemModel.class);
-            ProblemsCluster clusterItem = new ProblemsCluster(problemModel.getId(), problemModel.getPosition(),  problemModel.getPostedDate(), problemModel.getDescription(), false, problemModel.getPhotosUrlList());
+            ProblemsCluster clusterItem = new ProblemsCluster(problemModel.getId(), problemModel.getPosition(),  problemModel.getPostedDate(), problemModel.getDescription(), false, problemModel.getPhotosList());
             clusterManager.addItem(clusterItem);
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(clusterItem.getPosition().latitude,clusterItem.getPosition().longitude), 15));
         }
@@ -137,10 +138,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public boolean onClusterClick(Cluster<ProblemsCluster> cluster) {
                 googleMap.getUiSettings().setZoomControlsEnabled(false);
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(cluster.getPosition() )
-                        .zoom(12)
-                        .build();
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(cluster.getPosition(), 13));
                 return false;
             }
@@ -160,7 +157,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private void setMarkerData(ProblemsCluster item) {
         setRecyclerView(new ArrayList<>(item.getPhotosUrl()));
         issueDescriptionTv.setText(item.getDescription());
-        issueDateTv.setText(item.getPostedDate());
+        issueDateTv.setText(item.getPostedDate().substring(0,10));
     }
 
     private void setRecyclerView(ArrayList<String> photosUrl){
@@ -196,9 +193,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void addItems() {
-        for (int i = 0; i < Mockers.getInstance().mockMarkersList().size(); i++) {
-            ProblemModel problemModel = Mockers.getInstance().mockMarkersList().get(i);
-            ProblemsCluster clusterItem = new ProblemsCluster(problemModel.getId(), problemModel.getPosition(),  problemModel.getPostedDate(), problemModel.getDescription(), problemModel.isResolved(), problemModel.getPhotosUrlList());
+        List<ProblemModel> list =  StorageHelper.getInstance().getProblemsList();
+        if (list == null || list.size() == 0){
+            return;
+        }
+        for (int i = 0; i < list.size(); i++) {
+            ProblemModel problemModel = list.get(i);
+            LatLng position = new LatLng(problemModel.getLatitude(), problemModel.getLongitude());
+            ProblemsCluster clusterItem = new ProblemsCluster(problemModel.getId(), position,  problemModel.getPostedDate(), problemModel.getDescription(), problemModel.isResolved(), problemModel.getPhotosList());
             clusterManager.addItem(clusterItem);
         }
     }

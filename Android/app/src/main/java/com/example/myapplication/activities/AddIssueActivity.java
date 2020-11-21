@@ -25,6 +25,8 @@ import android.widget.Toast;
 import com.example.myapplication.R;
 import com.example.myapplication.adapters.UploadPicturesAdapter;
 import com.example.myapplication.appConstants.AppConstants;
+import com.example.myapplication.helpers.HttpClientManager;
+import com.example.myapplication.models.ImageModel;
 import com.example.myapplication.models.ProblemModel;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -70,6 +72,7 @@ public class AddIssueActivity extends AppCompatActivity implements OnMapReadyCal
         mImagesURIs = new ArrayList<>();
         problemModel = new ProblemModel();
         problemModel.setPhotosUrlList(new ArrayList<String>());
+        problemModel.setPhotosList(new ArrayList<ImageModel>());
     }
 
     @Override
@@ -83,6 +86,8 @@ public class AddIssueActivity extends AppCompatActivity implements OnMapReadyCal
                 MarkerOptions marker = new MarkerOptions().position(latLng);
                 googleMap.addMarker(marker);
                 problemModel.setPosition(latLng);
+                problemModel.setLatitude(latLng.latitude);
+                problemModel.setLongitude(latLng.longitude);
                 sendIssueFab.setVisibility(View.VISIBLE);
             }
         });
@@ -122,6 +127,7 @@ public class AddIssueActivity extends AppCompatActivity implements OnMapReadyCal
                         Uri downloadUri = task.getResult();
                         String mUri = downloadUri.toString();
                         problemModel.getPhotosUrlList().add(mUri);
+                        problemModel.getPhotosList().add(new ImageModel(mUri));
                         hideProgressDialog(pd);
                     }
                     else
@@ -137,23 +143,35 @@ public class AddIssueActivity extends AppCompatActivity implements OnMapReadyCal
         }
     }
 
-    private void hideProgressDialog(ProgressDialog progressDialog){
+    private void hideProgressDialog(final ProgressDialog progressDialog){
         uploadCounter++;
         if (uploadCounter >= mImagesURIs.size()){
-            progressDialog.dismiss();
-            onAddIssue();
+            problemModel.setDescription(descriptionEt.getText().toString());
+            HttpClientManager.getInstance().postProblem(problemModel, new HttpClientManager.OnDataReceived<ProblemModel>() {
+                @Override
+                public void dataReceived(ProblemModel data) {
+                    if (data == null){
+                        progressDialog.dismiss();
+                        return;
+                    }
+                    onAddIssue(problemModel);
+                    progressDialog.dismiss();
+                }
+
+                @Override
+                public void onFailed() {
+                    progressDialog.dismiss();
+                }
+            });
         }
     }
 
-    private void onAddIssue(){
-        problemModel.setDescription(descriptionEt.getText().toString());
-        //TODO  get id after uploading issue
-        int fakeId = 123;
-        problemModel.setId(fakeId);
-        problemModel.setPostedDate("23-04-2019");
+    private void onAddIssue(ProblemModel problem){
+        problem.setId(problem.getId());
+        problem.setPostedDate(problem.getResolvedDate());
         Intent intent = new Intent();
         Gson gson = new Gson();
-        intent.putExtra(ON_ADD_ISSUE, gson.toJson(problemModel));
+        intent.putExtra(ON_ADD_ISSUE, gson.toJson(problem));
         setResult(INTENT_RESULT_NUMBER, intent);
         finish();
     }

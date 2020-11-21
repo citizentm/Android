@@ -3,26 +3,39 @@ package com.example.myapplication.models;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
-public class ProblemModel {
+public class ProblemModel implements Serializable {
     @SerializedName("id")
     private int id;
+
     private LatLng position;
+
     @SerializedName("latitude")
     private double latitude;
+
     @SerializedName("longitude")
     private double longitude;
+
     @SerializedName("description")
     private String description;
-    @SerializedName("createdAt")
+
+    @SerializedName("created_at")
     private String postedDate;
+
     @SerializedName("resolvedAt")
     private String resolvedDate;
+
     @SerializedName("isResolved")
     private boolean isResolved;
-    @SerializedName("images")
+
     private List<String> photosUrlList;
+
+    @SerializedName("images")
+    private List<ImageModel> photosList;
+
     @SerializedName("votes")
     private int upvotes;
 
@@ -36,6 +49,14 @@ public class ProblemModel {
     }
 
     public ProblemModel() {
+    }
+
+    public List<ImageModel> getPhotosList() {
+        return photosList;
+    }
+
+    public void setPhotosList(List<ImageModel> photosList) {
+        this.photosList = photosList;
     }
 
     public int getUpvotes() {
@@ -60,6 +81,8 @@ public class ProblemModel {
 
     public void setPosition(LatLng position) {
         this.position = position;
+        this.setLatitude(position.latitude);
+        this.setLongitude(position.longitude);
     }
 
     public String getDescription() {
