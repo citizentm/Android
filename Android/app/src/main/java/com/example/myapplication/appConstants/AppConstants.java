@@ -8,6 +8,8 @@ public class AppConstants {
     public final static String SHARED_PREFS_NAME = "voteDetails";
     public final static String SAVED_CNP = "savedCnp";
     public final static String SAVED_ID_CARD = "savedIdCard";
+    public final static String ON_ADD_ISSUE = "onAddIssue";
+    public final static int INTENT_RESULT_NUMBER = 9531;
     public final static StorageReference FIREBASE_PROBLEMS_PHOTOS = FirebaseStorage.getInstance().getReference("problems");
 
 }

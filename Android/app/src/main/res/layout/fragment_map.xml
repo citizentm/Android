@@ -62,7 +62,7 @@
 
     <LinearLayout
         android:id="@+id/ll_map_issue_selected"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:gravity="center"
@@ -74,8 +74,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginTop="10dp"
-            app:tint="@android:color/white"
-            android:src="@drawable/ic_close"/>
+            android:src="@drawable/ic_down_arrow"/>
 
         <TextView
             android:id="@+id/tv_map_issue_description"

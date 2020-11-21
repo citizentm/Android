@@ -42,8 +42,12 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
+
+import static com.example.myapplication.appConstants.AppConstants.INTENT_RESULT_NUMBER;
+import static com.example.myapplication.appConstants.AppConstants.ON_ADD_ISSUE;
 
 public class AddIssueActivity extends AppCompatActivity implements OnMapReadyCallback {
     private static final int RESULT_LOAD_IMAGE = 1543;
@@ -78,6 +82,7 @@ public class AddIssueActivity extends AppCompatActivity implements OnMapReadyCal
                 googleMap.clear();
                 MarkerOptions marker = new MarkerOptions().position(latLng);
                 googleMap.addMarker(marker);
+                problemModel.setPosition(latLng);
                 sendIssueFab.setVisibility(View.VISIBLE);
             }
         });
@@ -136,8 +141,21 @@ public class AddIssueActivity extends AppCompatActivity implements OnMapReadyCal
         uploadCounter++;
         if (uploadCounter >= mImagesURIs.size()){
             progressDialog.dismiss();
-            Toast.makeText(this, "Issue reported! Timisoara is thankful!", Toast.LENGTH_SHORT).show();
+            onAddIssue();
         }
+    }
+
+    private void onAddIssue(){
+        problemModel.setDescription(descriptionEt.getText().toString());
+        //TODO  get id after uploading issue
+        int fakeId = 123;
+        problemModel.setId(fakeId);
+        problemModel.setPostedDate("23-04-2019");
+        Intent intent = new Intent();
+        Gson gson = new Gson();
+        intent.putExtra(ON_ADD_ISSUE, gson.toJson(problemModel));
+        setResult(INTENT_RESULT_NUMBER, intent);
+        finish();
     }
 
     private String getFileExtension(Uri uri)
