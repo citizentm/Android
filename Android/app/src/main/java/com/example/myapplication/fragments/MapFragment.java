@@ -140,7 +140,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public boolean onClusterClick(Cluster<ProblemsCluster> cluster) {
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(cluster.getPosition(), 14));
-                return false;
+                return true;
             }
         });
 
@@ -149,7 +149,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             public boolean onClusterItemClick(ProblemsCluster item) {
                 setMarkerData(item);
                 slideUp(bottomContainerLl);
-                return false;
+                return true;
             }
         });
         addItems();
