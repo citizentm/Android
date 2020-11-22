@@ -11,10 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.myapplication.R;
 import com.example.myapplication.appConstants.AppConstants;
 import com.example.myapplication.models.InitiativeModel;
+import com.example.myapplication.models.Initiators;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
@@ -30,6 +32,7 @@ public class ProjectActivity extends AppCompatActivity {
     private String projectName;
     private String cnp = "";
     private String idCard = "";
+    private InitiativeModel initiativeModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +42,7 @@ public class ProjectActivity extends AppCompatActivity {
         new InitiativeModel();
         Gson gson = new Gson();
         String aux = getIntent().getStringExtra(AppConstants.PROJECT_MODEL_KEY);
-        InitiativeModel initiativeModel = gson.fromJson(aux, InitiativeModel.class);
+        initiativeModel = gson.fromJson(aux, InitiativeModel.class);
         projectId = initiativeModel.getId();
         projectName = initiativeModel.getName();
         setValues(initiativeModel);
@@ -55,11 +58,27 @@ public class ProjectActivity extends AppCompatActivity {
     }
 
     private void setValues(InitiativeModel initiativeModel) {
+        String euro = "\u20ac";
         titleTv.setText(initiativeModel.getName());
         descriptionTv.setText(initiativeModel.getDescription());
-        financingNeededTv.setText(floatToLong(initiativeModel.getFinancingNeededAmount()) +" lei");
+        financingNeededTv.setText(floatToLong(initiativeModel.getFinancingNeededAmount()) +euro);
         ownersTv.setText(initiativeModel.getOwnersDetails());
         upvotesTv.setText(String.valueOf(initiativeModel.getVotes()));
+        StringBuilder initiators = new StringBuilder();
+        if (initiativeModel.getInitiatorsList()== null || initiativeModel.getInitiatorsList().size() ==0){
+            return;
+        }
+        boolean first = true;
+        for (Initiators initiator: initiativeModel.getInitiatorsList()) {
+            if (first){
+                initiators.append(initiator.getName());
+                first= false;
+            }
+            else{
+                initiators.append(", " + initiator.getName());
+            }
+        }
+        ownersTv.setText(initiators.toString());
     }
 
     private void initializeViews() {
@@ -110,6 +129,8 @@ public class ProjectActivity extends AppCompatActivity {
                 if (saveDataForFutureVotesCb.isChecked()){
                     saveDetailsInSharedPreferences(cnp, idCard);
                 }
+                upvotesTv.setText(String.valueOf(initiativeModel.getVotes() + 1));
+                Toast.makeText(ProjectActivity.this, "Thank your for being a part of the community!", Toast.LENGTH_SHORT).show();
             }
         });
 

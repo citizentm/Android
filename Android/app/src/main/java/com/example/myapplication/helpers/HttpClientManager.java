@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.example.myapplication.models.InitiativeModel;
 import com.example.myapplication.models.ProblemModel;
+import com.example.myapplication.models.Voters;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -92,6 +93,26 @@ public class HttpClientManager {
     }
 
     public void getInitiatives(final OnDataReceived<List<InitiativeModel>> callback){
+        Call<List<InitiativeModel>> serverCall = service.getInitiatives();
+        serverCall.enqueue(new Callback<List<InitiativeModel>>() {
+            @Override
+            public void onResponse(Call<List<InitiativeModel>> call, Response<List<InitiativeModel>> response) {
+                if (response.isSuccessful())
+                {
+                    List<InitiativeModel> myResponse = response.body();
+                    callback.dataReceived(myResponse);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<InitiativeModel>> call, Throwable t) {
+
+            }
+        });
+    }
+
+
+    public void postVote(Voters vote, final OnDataReceived<List<InitiativeModel>> callback){
         Call<List<InitiativeModel>> serverCall = service.getInitiatives();
         serverCall.enqueue(new Callback<List<InitiativeModel>>() {
             @Override

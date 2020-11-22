@@ -1,26 +1,20 @@
 package com.example.myapplication.activities;
 
-import androidx.annotation.DrawableRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
 import com.example.myapplication.adapters.UploadPicturesAdapter;
@@ -32,8 +26,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Continuation;
@@ -95,8 +87,8 @@ public class AddIssueActivity extends AppCompatActivity implements OnMapReadyCal
 
     public void sendIssueToServer(View view) {
         boolean hasNoPhotosInList = mImagesURIs == null || mImagesURIs.size() == 0;
-        if (descriptionEt.getText().toString().isEmpty() && hasNoPhotosInList){
-            Toast.makeText(this, "Please fill description or add photos", Toast.LENGTH_SHORT).show();
+        if (descriptionEt.getText().toString().isEmpty() || hasNoPhotosInList){
+            Toast.makeText(this, "Please fill description and add photos", Toast.LENGTH_SHORT).show();
             return;
         }
         if (mImagesURIs == null || mImagesURIs.size() == 0){
@@ -104,7 +96,7 @@ public class AddIssueActivity extends AppCompatActivity implements OnMapReadyCal
         }
 
         final ProgressDialog pd = new ProgressDialog(this);
-        pd.setMessage("Uploading");
+        pd.setMessage("Reporting issue");
         pd.show();
 
         for (Uri photoUrl: mImagesURIs) {
@@ -212,7 +204,7 @@ public class AddIssueActivity extends AppCompatActivity implements OnMapReadyCal
             mPictureAdapter = new UploadPicturesAdapter(mImagesURIs);
         }
 
-        addPhotosFab.setVisibility(View.GONE);
+//        addPhotosFab.setVisibility(View.GONE);
         photosListRv.setVisibility(View.VISIBLE);
         photosListRv.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
         photosListRv.setAdapter(mPictureAdapter);

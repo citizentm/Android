@@ -5,6 +5,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginBottom="10dp">
 
+    <View
+        android:id="@+id/v_row_upload_overlay"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:background="#305B5B5B"/>
+
     <ImageView
         android:id="@+id/iv_row_upload_image"
         android:layout_width="200dp"
@@ -16,7 +22,8 @@
         android:id="@+id/iv_row_upload_close"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        app:tint="@color/colorAccent"
+        android:padding="5dp"
+        app:tint="#d3ff1234"
         android:layout_alignEnd="@+id/iv_row_upload_image"
         android:src="@drawable/ic_close"/>
 

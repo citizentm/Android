@@ -10,6 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        app:itemIconTint="@drawable/bottom_navigation_items_color"
+        app:itemTextColor="@drawable/bottom_navigation_items_color"
         app:menu="@menu/bottom_nav_menu" />
 
     <FrameLayout

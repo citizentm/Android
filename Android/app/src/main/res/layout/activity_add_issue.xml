@@ -5,11 +5,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusableInTouchMode="true"
     tools:context=".activities.AddIssueActivity">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="30dp"
         android:fillViewport="true">
 
         <RelativeLayout
@@ -34,7 +36,7 @@
                 android:textStyle="bold"
                 android:gravity="center"
                 android:layout_below="@+id/f_google_map_add_issue"
-                android:text="A place must be selected for an issue to be valid"/>
+                android:text="Tap the map to select a location"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_issues_description"
@@ -110,15 +112,4 @@
         android:textAllCaps="false"
         android:onClick="sendIssueToServer"
         android:text="Add issue"/>
-
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:gravity="center">-->
-
-<!--        <ProgressBar-->
-<!--            android:layout_width="50dp"-->
-<!--            android:layout_height="50dp"/>-->
-<!--    </LinearLayout>-->
-
 </RelativeLayout>

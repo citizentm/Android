@@ -139,7 +139,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         clusterManager.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<ProblemsCluster>() {
             @Override
             public boolean onClusterClick(Cluster<ProblemsCluster> cluster) {
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(cluster.getPosition(), 15));
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(cluster.getPosition(), 14));
                 return false;
             }
         });
@@ -180,6 +180,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         animate.setDuration(500);
         animate.setFillAfter(true);
         view.startAnimation(animate);
+        addIssueFab.setVisibility(View.INVISIBLE);
     }
 
     private void slideDown(View view){
@@ -191,6 +192,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         animate.setDuration(500);
         animate.setFillAfter(true);
         view.startAnimation(animate);
+        addIssueFab.setVisibility(View.VISIBLE);
     }
 
     private void addItems() {

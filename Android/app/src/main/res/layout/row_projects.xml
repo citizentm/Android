@@ -9,7 +9,7 @@
     android:background="@android:color/white"
     app:strokeWidth="2dp"
     android:layout_margin="10dp"
-    app:strokeColor="@color/colorPrimaryDark">
+    app:strokeColor="@color/colorPrimary">
     <RelativeLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -21,6 +21,9 @@
             android:layout_height="wrap_content"
             android:maxLines="1"
             android:ellipsize="end"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@color/colorPrimaryDark"
             android:text="Project name here"/>
 
         <TextView
@@ -29,6 +32,8 @@
             android:layout_height="wrap_content"
             android:maxLines="3"
             android:ellipsize="end"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimaryDark"
             android:layout_below="@+id/tv_row_projects_name"
             android:text="Project description here"/>
 
@@ -37,6 +42,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="6dp"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimaryDark"
             android:layout_below="@+id/tv_row_projects_description"
             android:text="Amount needed: "/>
 
@@ -52,8 +59,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="6dp"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimaryDark"
             android:layout_below="@+id/tv_row_projects_amount_text"
-            android:text="Upvotes"/>
+            android:text="Votes: "/>
 
         <TextView
             android:id="@+id/tv_row_projects_upvotes"

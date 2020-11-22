@@ -50,12 +50,14 @@ public class UploadPicturesAdapter extends RecyclerView.Adapter<UploadPicturesAd
     public class ViewHolder extends RecyclerView.ViewHolder{
         public ImageView closeIv;
         public ImageView photoUploadedIv;
+        public View overlayV;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             closeIv = itemView.findViewById(R.id.iv_row_upload_close);
             photoUploadedIv = itemView.findViewById(R.id.iv_row_upload_image);
+            overlayV = itemView.findViewById(R.id.v_row_upload_overlay);
 
             closeIv.setOnClickListener(new View.OnClickListener() {
                 @Override

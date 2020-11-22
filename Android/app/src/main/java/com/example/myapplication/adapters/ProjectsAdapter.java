@@ -73,9 +73,10 @@ class ProjectsViewHolder extends RecyclerView.ViewHolder{
         if (initiativeModel == null){
             return;
         }
+        String euro = "\u20ac";
         nameTv.setText(initiativeModel.getName());
         descriptionTv.setText(initiativeModel.getDescription());
-        amountNeededTv.setText(floatToLong(initiativeModel.getFinancingNeededAmount()) + " lei");
+        amountNeededTv.setText(floatToLong(initiativeModel.getFinancingNeededAmount()) + euro);
         votesTv.setText(String.valueOf(initiativeModel.getVotes()));
     }
 

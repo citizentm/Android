@@ -36,7 +36,6 @@ public class ProjectsFragment extends Fragment {
         HttpClientManager.getInstance().getInitiatives(new HttpClientManager.OnDataReceived<List<InitiativeModel>>() {
             @Override
             public void dataReceived(List<InitiativeModel> data) {
-                ArrayList<InitiativeModel> projectsList = new ArrayList<>(data);
                 setRecyclerView(data);
             }
 
