@@ -4,7 +4,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,7 +14,7 @@ import android.widget.TextView;
 
 import com.example.myapplication.R;
 import com.example.myapplication.appConstants.AppConstants;
-import com.example.myapplication.models.ProjectModel;
+import com.example.myapplication.models.InitiativeModel;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
@@ -37,13 +36,13 @@ public class ProjectActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_project);
         initializeViews();
-        new ProjectModel();
+        new InitiativeModel();
         Gson gson = new Gson();
         String aux = getIntent().getStringExtra(AppConstants.PROJECT_MODEL_KEY);
-        ProjectModel projectModel = gson.fromJson(aux, ProjectModel.class);
-        projectId = projectModel.getId();
-        projectName = projectModel.getName();
-        setValues(projectModel);
+        InitiativeModel initiativeModel = gson.fromJson(aux, InitiativeModel.class);
+        projectId = initiativeModel.getId();
+        projectName = initiativeModel.getName();
+        setValues(initiativeModel);
         getDataFromSharedPreferences();
     }
 
@@ -55,12 +54,12 @@ public class ProjectActivity extends AppCompatActivity {
             return String.format("%s",d);
     }
 
-    private void setValues(ProjectModel projectModel) {
-        titleTv.setText(projectModel.getName());
-        descriptionTv.setText(projectModel.getDescription());
-        financingNeededTv.setText(floatToLong(projectModel.getFinancingNeededAmount()) +" lei");
-        ownersTv.setText(projectModel.getOwnersDetails());
-        upvotesTv.setText(String.valueOf(projectModel.getVotes()));
+    private void setValues(InitiativeModel initiativeModel) {
+        titleTv.setText(initiativeModel.getName());
+        descriptionTv.setText(initiativeModel.getDescription());
+        financingNeededTv.setText(floatToLong(initiativeModel.getFinancingNeededAmount()) +" lei");
+        ownersTv.setText(initiativeModel.getOwnersDetails());
+        upvotesTv.setText(String.valueOf(initiativeModel.getVotes()));
     }
 
     private void initializeViews() {

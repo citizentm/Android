@@ -154,6 +154,8 @@ public class AddIssueActivity extends AppCompatActivity implements OnMapReadyCal
                         progressDialog.dismiss();
                         return;
                     }
+                    problemModel.setId(data.getId());
+                    problemModel.setPostedDate(data.getPostedDate().substring(0, 10));
                     onAddIssue(problemModel);
                     progressDialog.dismiss();
                 }
@@ -167,8 +169,6 @@ public class AddIssueActivity extends AppCompatActivity implements OnMapReadyCal
     }
 
     private void onAddIssue(ProblemModel problem){
-        problem.setId(problem.getId());
-        problem.setPostedDate(problem.getResolvedDate());
         Intent intent = new Intent();
         Gson gson = new Gson();
         intent.putExtra(ON_ADD_ISSUE, gson.toJson(problem));

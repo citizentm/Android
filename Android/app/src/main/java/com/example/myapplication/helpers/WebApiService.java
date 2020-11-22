@@ -1,5 +1,6 @@
 package com.example.myapplication.helpers;
 
+import com.example.myapplication.models.InitiativeModel;
 import com.example.myapplication.models.ProblemModel;
 
 import java.util.List;
@@ -18,4 +19,7 @@ public interface WebApiService {
 
     @POST("problems")
     Call<ProblemModel> postIssue(@Body ProblemModel model);
+
+    @GET("initiatives")
+    Call<List<InitiativeModel>> getInitiatives();
 }

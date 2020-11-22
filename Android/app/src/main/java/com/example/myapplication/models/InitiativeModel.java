@@ -1,15 +1,33 @@
 package com.example.myapplication.models;
 
-public class ProjectModel {
+import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
+
+public class InitiativeModel {
+    @SerializedName("id")
     private int id;
+
+    @SerializedName("title")
     private String name;
-    private String financingDate;
+
+    @SerializedName("description")
     private String description;
+
+    @SerializedName("budget")
     private float financingNeededAmount;
+
+    @SerializedName("initiators")
+    private List<Initiators> initiatorsList;
+
+    @SerializedName("voters")
+    private List<Voters> votersList;
+
     private String ownersDetails;
     private int votes;
+    private String financingDate;
 
-    public ProjectModel(int id, String name, String financingDate, String description, float financingNeededAmount, String ownersDetails, int votes) {
+    public InitiativeModel(int id, String name, String financingDate, String description, float financingNeededAmount, String ownersDetails, int votes) {
         this.id = id;
         this.name = name;
         this.financingDate = financingDate;
@@ -19,14 +37,30 @@ public class ProjectModel {
         this.votes = votes;
     }
 
-    public ProjectModel(String name, String description, float financingNeededAmount, int votes) {
+    public InitiativeModel(String name, String description, float financingNeededAmount, int votes) {
         this.name = name;
         this.description = description;
         this.financingNeededAmount = financingNeededAmount;
         this.votes = votes;
     }
 
-    public ProjectModel() {
+    public InitiativeModel() {
+    }
+
+    public List<Initiators> getInitiatorsList() {
+        return initiatorsList;
+    }
+
+    public void setInitiatorsList(List<Initiators> initiatorsList) {
+        this.initiatorsList = initiatorsList;
+    }
+
+    public List<Voters> getVotersList() {
+        return votersList;
+    }
+
+    public void setVotersList(List<Voters> votersList) {
+        this.votersList = votersList;
     }
 
     public int getId() {

@@ -10,10 +10,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.activities.ProjectActivity;
-import com.example.myapplication.models.ProjectModel;
+import com.example.myapplication.models.InitiativeModel;
 import com.google.gson.Gson;
 
 import java.util.List;
@@ -22,7 +21,7 @@ import static com.example.myapplication.activities.ProjectActivity.floatToLong;
 import static com.example.myapplication.appConstants.AppConstants.PROJECT_MODEL_KEY;
 
 public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsViewHolder> {
-    private List<ProjectModel> projectsList;
+    private List<InitiativeModel> projectsList;
     private Context context;
 
     @NonNull
@@ -33,20 +32,20 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsViewHolder> {
         return new ProjectsViewHolder(v);
     }
 
-    public ProjectsAdapter(List<ProjectModel> projectsList) {
+    public ProjectsAdapter(List<InitiativeModel> projectsList) {
         this.projectsList = projectsList;
     }
 
     @Override
     public void onBindViewHolder(@NonNull final ProjectsViewHolder holder, int position) {
-        final ProjectModel projectModel = projectsList.get(position);
-        holder.setValues(projectModel);
+        final InitiativeModel initiativeModel = projectsList.get(position);
+        holder.setValues(initiativeModel);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, ProjectActivity.class);
                 Gson gson = new Gson();
-                String toSend = gson.toJson(projectModel);
+                String toSend = gson.toJson(initiativeModel);
                 intent.putExtra(PROJECT_MODEL_KEY, toSend);
                 context.startActivity(intent);
             }
@@ -70,14 +69,14 @@ class ProjectsViewHolder extends RecyclerView.ViewHolder{
         initializeViews(itemView);
     }
 
-    public void setValues(ProjectModel projectModel){
-        if (projectModel == null){
+    public void setValues(InitiativeModel initiativeModel){
+        if (initiativeModel == null){
             return;
         }
-        nameTv.setText(projectModel.getName());
-        descriptionTv.setText(projectModel.getDescription());
-        amountNeededTv.setText(floatToLong(projectModel.getFinancingNeededAmount()) + " lei");
-        votesTv.setText(String.valueOf(projectModel.getVotes()));
+        nameTv.setText(initiativeModel.getName());
+        descriptionTv.setText(initiativeModel.getDescription());
+        amountNeededTv.setText(floatToLong(initiativeModel.getFinancingNeededAmount()) + " lei");
+        votesTv.setText(String.valueOf(initiativeModel.getVotes()));
     }
 
     private void initializeViews(View itemView) {

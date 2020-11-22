@@ -114,19 +114,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             if (data == null){
                 return;
             }
-            Toast.makeText(getContext(), "Our community is grateful for your report", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Our community is grateful for your involvement", Toast.LENGTH_SHORT).show();
             String result = data.getStringExtra(AppConstants.ON_ADD_ISSUE);
             Gson gson = new Gson();
             ProblemModel problemModel = gson.fromJson(result, ProblemModel.class);
+            StorageHelper.getInstance().getProblemsList().add(problemModel);
             ProblemsCluster clusterItem = new ProblemsCluster(problemModel.getId(), problemModel.getPosition(),  problemModel.getPostedDate(), problemModel.getDescription(), false, problemModel.getPhotosList());
             clusterManager.addItem(clusterItem);
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(clusterItem.getPosition().latitude,clusterItem.getPosition().longitude), 15));
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(clusterItem.getPosition().latitude, clusterItem.getPosition().longitude), 15));
         }
     }
 
     @Override
     public void onMapReady(final GoogleMap googleMap) {
         this.googleMap = googleMap;
+        googleMap.getUiSettings().setZoomControlsEnabled(false);
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(45.7518239,21.2221786), 13));
         clusterManager = new ClusterManager<>(getContext(), googleMap);
         googleMap.setOnCameraIdleListener(clusterManager);
@@ -137,8 +139,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         clusterManager.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<ProblemsCluster>() {
             @Override
             public boolean onClusterClick(Cluster<ProblemsCluster> cluster) {
-                googleMap.getUiSettings().setZoomControlsEnabled(false);
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(cluster.getPosition(), 13));
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(cluster.getPosition(), 15));
                 return false;
             }
         });
