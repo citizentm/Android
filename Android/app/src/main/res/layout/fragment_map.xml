@@ -64,6 +64,13 @@
             android:text="Fixed problems"/>
     </LinearLayout>
 
+    <View
+        android:id="@+id/v_map_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:background="#305B5B5B"/>
+
     <LinearLayout
         android:id="@+id/ll_map_issue_selected"
         android:layout_width="match_parent"

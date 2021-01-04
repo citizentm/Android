@@ -64,6 +64,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private RecyclerView issuePhotoListRv;
     private ImageView closeDetailsIv;
     private GoogleMap googleMap;
+    private View overlay;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -180,6 +181,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         animate.setDuration(500);
         animate.setFillAfter(true);
         view.startAnimation(animate);
+        overlay.setVisibility(View.VISIBLE);
         addIssueFab.setVisibility(View.INVISIBLE);
     }
 
@@ -192,6 +194,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         animate.setDuration(500);
         animate.setFillAfter(true);
         view.startAnimation(animate);
+        overlay.setVisibility(GONE);
         addIssueFab.setVisibility(View.VISIBLE);
     }
 
@@ -217,6 +220,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         issueDateTv = root.findViewById(R.id.tv_map_issue_date);
         bottomContainerLl = root.findViewById(R.id.ll_map_issue_selected);
         closeDetailsIv = root.findViewById(R.id.iv_map_issue_close);
+        overlay = root.findViewById(R.id.v_map_overlay);
     }
 
     private void onProblemsTabChanged(int selectedTab){
